@@ -1,9 +1,8 @@
 const net = require( 'net' );
 const udp = require( 'dgram' );
+
 /**
- * [createMagicPacket]
- * @param  {[type]} mac [description]
- * @return {[type]}     [description]
+ * create magic packet
  * @wiki https://en.wikipedia.org/wiki/Wake-on-LAN
  * @docs http://support.amd.com/TechDocs/20213.pdf
  */
@@ -22,12 +21,9 @@ function createMagicPacket ( mac ) {
 	}
 	return buffer;
 };
+
 /**
- * [wake on lan]
- * @param  {[type]}   mac      [description]
- * @param  {[type]}   options  [description]
- * @param  {Function} callback [description]
- * @return {[type]}            [description]
+ * wake on lan
  */
 function wake ( mac, options, callback ) {
 	options = options || {};
@@ -35,7 +31,7 @@ function wake ( mac, options, callback ) {
 		callback = options;
 	}
 	const { address, port } = Object.assign( {
-		address: '192.168.11.255',
+		address: '255.255.255.255',
 		port: 9
 	}, options );
 	// create magic packet

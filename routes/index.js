@@ -9,11 +9,11 @@ router.get( '/', function ( req, res ) {
 
 router.get( '/wake/:id', function ( req, res ) {
   const mac = '18:C0:4D:4C:93:12';
-  wolDao.wake( mac, function ( err ) {
+  wolDao.wake( mac, { address: '192.168.11.255' }, function ( err ) {
     if ( err ) {
       throw err;
     }
-    console.log( 'send magic packet to %s success .', mac );
+    console.log( 'send magic packet to %s success.', mac );
   } );
   res.send();
 } );
