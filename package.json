@@ -1,6 +1,9 @@
 {
-  "name": "wol-td02",
-  "version": "0.0.0",
+  "name": "TD02-Wake-on-LAN",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=10.5.0"
+  },
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -12,5 +15,14 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "nodemon": "^2.0.7"
   }
 }
