@@ -1,11 +1,13 @@
+require('module-alias/register');
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const addressRouter = require('./routes/address');
-const wakeRouter = require('./routes/wake');
+const addressRouter = require('@routes/address');
+const wakeRouter = require('@routes/wake');
 
 const app = express();
 

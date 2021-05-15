@@ -5,6 +5,12 @@
     "node": ">=10.5.0"
   },
   "private": true,
+  "_moduleAliases": {
+    "@root": "./",
+    "@config": "./config/",
+    "@routes": "./routes/",
+    "@dao": "./dao/"
+  },
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -14,7 +20,9 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "module-alias": "^2.2.2",
+    "morgan": "~1.9.1",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
     "eslint": "^7.19.0",

@@ -44,10 +44,7 @@
                     ["@root", "./"],
                     ["@config", "./config/"],
                     ["@routes", "./routes/"],
-                    ["@controllers", "./controllers/"],
-                    ["@middlewares", "./middlewares/"],
-                    ["@models", "./models/"],
-                    ["@utils", "./utils/"]
+                    ["@dao", "./dao/"]
                 ],
                 "extensions": [".js", ".json"]
             }
