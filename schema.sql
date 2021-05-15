@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS `WakeOnLAN`
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_general_ci;
 
+
 -- DROP TABLE IF EXISTS `WakeOnLAN`.`macAddress`;
 CREATE TABLE IF NOT EXISTS `WakeOnLAN`.`macAddress` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
@@ -14,18 +15,6 @@ CREATE TABLE IF NOT EXISTS `WakeOnLAN`.`macAddress` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE `WakeOnLAN`.`macAddress` AUTO_INCREMENT = 1;
-
-
--- DROP TABLE IF EXISTS `WakeOnLAN`.`log`;
-CREATE TABLE IF NOT EXISTS `WakeOnLAN`.`log` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `description` TEXT COLLATE utf8mb4_general_ci,
-  `ipAddress` varchar(16) COLLATE utf8mb4_general_ci,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `WakeOnLAN`.`log` AUTO_INCREMENT = 1;
 
 
 INSERT INTO `WakeOnLAN`.`macAddress` (`name`, `macAddress`, `port`)
