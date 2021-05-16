@@ -12,7 +12,10 @@
     "@dao": "./dao/"
   },
   "scripts": {
-    "start": "node ./bin/www"
+    "dev": "NODE_ENV=development nodemon --ignore ./frontend/ --verbose ./bin/www",
+    "dev:debug": "NODE_ENV=development DEBUG=*:* nodemon --ignore ./frontend/ --verbose ./bin/www",
+    "start": "NODE_ENV=production node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
