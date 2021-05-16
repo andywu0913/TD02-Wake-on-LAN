@@ -1,7 +1,6 @@
 const express = require('express');
 const arpLookup = require('@network-utils/arp-lookup');
 const ping = require('ping');
-
 const addressDao = require('@dao/addressDao');
 
 const router = express.Router();

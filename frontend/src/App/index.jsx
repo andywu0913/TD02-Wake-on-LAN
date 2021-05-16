@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { BroadcastPin, CloudCheckFill, CloudSlashFill, Cursor, HddNetwork, Lightning, PencilSquare, PlugFill, TrashFill } from 'react-bootstrap-icons';
+import { BroadcastPin, CloudCheck, CloudSlash, Cursor, HddNetwork, Lightning, PencilSquare, PlugFill, TrashFill } from 'react-bootstrap-icons';
 
 import axios from 'axios';
 import moment from 'moment';
@@ -249,18 +249,18 @@ export default function MainPage() {
             const updateTime = user.updateTime ? moment(user.updateTime).format('lll') : null;
             return (
               <tr key={user.id}>
-                <td className="align-middle text-nowrap">{user.name}</td>
-                <td className="align-middle text-nowrap">{user.macAddress}</td>
-                <td className="align-middle text-nowrap">{user.port}</td>
-                <td className="align-middle text-nowrap">{user.ipAddress}</td>
-                <td className="align-middle text-nowrap">
-                  {user.pingTime ? <CloudCheckFill size="1.75rem" color="#99ff99" /> : <CloudSlashFill size="1.75rem" color="#ff9999" />}
+                <td className="text-nowrap">{user.name}</td>
+                <td className="text-nowrap">{user.macAddress}</td>
+                <td className="text-nowrap">{user.port}</td>
+                <td className="text-nowrap">{user.ipAddress}</td>
+                <td className="pl-4 text-nowrap text-left">
+                  {user.pingTime ? <CloudCheck size="1.75rem" color="#28a746" /> : <CloudSlash size="1.75rem" color="#dc3545" />}
                   &nbsp;
-                  {user.pingTime ? <small>({user.pingTime}ms)</small> : <small>{user.pingTime}(offline)</small>}
+                  {user.pingTime ? <small className="text-success">({user.pingTime}ms)</small> : <small className="text-danger">{user.pingTime}(offline)</small>}
                 </td>
-                <td className="align-middle text-nowrap">{createTime}</td>
-                <td className="align-middle text-nowrap">{updateTime}</td>
-                <td className="align-middle text-nowrap">
+                <td className="text-nowrap">{createTime}</td>
+                <td className="text-nowrap">{updateTime}</td>
+                <td className="text-nowrap">
                   <Button variant="success" className="mr-2 text-nowrap" size="sm" onClick={() => handleWakeUp(user.id)}>
                     <PlugFill size="1.25rem" />&nbsp;發送開機訊號
                   </Button>

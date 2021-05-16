@@ -1,0 +1,6 @@
+module.exports = {
+  LAN_BROADCAST_ADDRESS: '192.168.11.255',
+  NUM_PACKETS: 5,
+  INTERVAL: 100,
+  PORT: 9,
+};
