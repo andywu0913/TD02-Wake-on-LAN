@@ -6,11 +6,16 @@ import axios from 'axios';
 import moment from 'moment';
 import swal from 'sweetalert2';
 
+import CreateUpdateModal from 'SRC/Modal/CreateUpdateModal';
+
 import BackendURL from 'BackendURL';
 
 export default function MainPage() {
   const [data, setData] = useState([]);
   const [needReload, setNeedReload] = useState(true);
+  const [showCreateUpdateModal, setShowCreateUpdateModal] = useState(false);
+  const [userObj, setUserObj] = useState({});
+  const [handleModalSubmit, setHandleModalSubmit] = useState(() => () => {});
 
   useEffect(() => {
     if (!needReload) {
@@ -25,18 +30,12 @@ export default function MainPage() {
       })
       .catch((error) => {
         if (error.response && error.response.data) {
-          const { error_msg: message = '' } = error.response.data;
-          swal.fire({ icon: 'error', title: 'Error', text: message });
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
           return;
         }
         swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
       });
   }, [needReload]);
-
-  // function updateUser(userObj) {
-  //   setUserObj(userObj);
-  //   setShowUpdateUserModal(true);
-  // }
 
   function handleWakeUp(id) {
     swal.showLoading();
@@ -50,22 +49,75 @@ export default function MainPage() {
 
     axios.post(url)
       .then((response) => {
-        swal.fire({ icon: 'success', title: response.data || 'Success', showConfirmButton: false, timer: 1500 })
-          .then(() => setTimeout(() => setNeedReload(true), 200));
+        setTimeout(() => {
+          swal.fire({ icon: 'success', title: 'Success', text: response.data, showConfirmButton: false, timer: 1500 });
+        }, 400);
       })
       .catch((error) => {
         if (error.response && error.response.data) {
-          const message = error.response.data || '';
-          swal.fire({ icon: 'error', title: 'Error', text: message });
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
           return;
         }
         swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
       });
   }
 
+  function handleCreate(userObj, callback) {
+    swal.showLoading();
+    axios.post(`${BackendURL}/address`, userObj)
+      .then((response) => {
+        setTimeout(() => {
+          swal.fire({ icon: 'success', title: 'Success', text: response.data, showConfirmButton: false, timer: 1500 })
+            .then(() => setTimeout(() => {
+              setShowCreateUpdateModal(false);
+              setNeedReload(true);
+            }, 200));
+        }, 400);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
+          return;
+        }
+        swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
+      })
+      .finally(() => setTimeout(() => {
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }, 400));
+  }
+
+  function handleUpdate(userObj, callback) {
+    swal.showLoading();
+    axios.put(`${BackendURL}/address/${userObj.id}`, userObj)
+      .then((response) => {
+        setTimeout(() => {
+          swal.fire({ icon: 'success', title: 'Success', text: response.data, showConfirmButton: false, timer: 1500 })
+            .then(() => setTimeout(() => {
+              setShowCreateUpdateModal(false);
+              setNeedReload(true);
+            }, 200));
+        }, 400);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
+          return;
+        }
+        swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
+      })
+      .finally(() => setTimeout(() => {
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }, 400));
+  }
+
   function handleDelete(name, id) {
     swal.fire({
-      title: `確認要刪除 ${name} 的裝置記錄?`,
+      title: 'Delete',
+      text: `確認要刪除 ${name} 的裝置記錄?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -76,21 +128,32 @@ export default function MainPage() {
       if (!result.isConfirmed) {
         return;
       }
-      swal.showLoading();
+      swal.fire({ onOpen: () => swal.showLoading() });
       axios.delete(`${BackendURL}/address/${id}`)
         .then((response) => {
-          swal.fire({ icon: 'success', title: response.data || 'Success', showConfirmButton: false, timer: 1500 })
-            .then(() => setTimeout(() => setNeedReload(true), 200));
+          setTimeout(() => {
+            swal.fire({ icon: 'success', title: 'Success', text: response.data, showConfirmButton: false, timer: 1500 })
+              .then(() => setTimeout(() => setNeedReload(true), 200));
+          }, 400);
         })
         .catch((error) => {
           if (error.response && error.response.data) {
-            const message = error.response.data || '';
-            swal.fire({ icon: 'error', title: 'Error', text: message });
+            swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
             return;
           }
           swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
         });
     });
+  }
+
+  function toggleCreateUpdateModal(userObj) {
+    setUserObj(userObj || {});
+    if (!userObj) {
+      setHandleModalSubmit(() => (userObj, callback) => handleCreate(userObj, callback));
+    } else {
+      setHandleModalSubmit(() => (userObj, callback) => handleUpdate(userObj, callback));
+    }
+    setShowCreateUpdateModal(true);
   }
 
   return (
@@ -102,7 +165,7 @@ export default function MainPage() {
       </Row>
       <Row className="pt-3">
         <Col>
-          <Button variant="outline-info" className="mr-3 mt-3 text-nowrap">
+          <Button variant="outline-info" className="mr-3 mt-3 text-nowrap" onClick={() => toggleCreateUpdateModal()}>
             <HddNetwork size="1.25rem" />&nbsp;新增MAC位址
           </Button>
           <Button variant="outline-success" className="mt-3 text-nowrap" onClick={() => handleWakeUp()}>
@@ -116,7 +179,7 @@ export default function MainPage() {
           <tr className="text-center text-nowrap">
             <th>暱稱</th>
             <th>MAC位址</th>
-            <th>port</th>
+            <th>Port</th>
             <th>創建時間</th>
             <th>最後修改時間</th>
             <th>操作</th>
@@ -137,7 +200,7 @@ export default function MainPage() {
                   <Button variant="success" className="mr-2 text-nowrap" size="sm" onClick={() => handleWakeUp(user.id)}>
                     <Lightning size="1.25rem" />&nbsp;發送開機訊號
                   </Button>
-                  <Button variant="info" className="mr-2 text-nowrap" size="sm">
+                  <Button variant="info" className="mr-2 text-nowrap" size="sm" onClick={() => toggleCreateUpdateModal(user)}>
                     <PencilSquare size="1.25rem" />&nbsp;編輯
                   </Button>
                   <Button variant="danger" className="text-nowrap" size="sm" onClick={() => handleDelete(user.name, user.id)}>
@@ -149,6 +212,15 @@ export default function MainPage() {
           })}
         </tbody>
       </Table>
+      <CreateUpdateModal
+        show={showCreateUpdateModal}
+        id={userObj.id}
+        name={userObj.name}
+        macAddress={userObj.macAddress}
+        port={userObj.port}
+        handleSubmit={handleModalSubmit}
+        hideModal={() => setShowCreateUpdateModal(false)}
+      />
     </Container>
   );
 }
