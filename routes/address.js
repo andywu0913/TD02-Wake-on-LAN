@@ -9,6 +9,7 @@ const portRegex = /^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{
 router.get('/', async (req, res) => {
   try {
     const result = await addressDao.query();
+
     return res.json(result);
   } catch (error) {
     console.error(error);
@@ -32,7 +33,7 @@ router.post('/', async (req, res) => {
       return res.status(400).send('port錯誤');
     }
 
-    await addressDao.create(name, macAddress, port);
+    await addressDao.create(name, macAddress.toUpperCase(), port);
 
     return res.send('新增成功');
   } catch (error) {
@@ -62,7 +63,7 @@ router.put('/:id', async (req, res) => {
       return res.status(400).send('port錯誤');
     }
 
-    const { affectedRows } = await addressDao.update(id, name, macAddress, port);
+    const { affectedRows } = await addressDao.update(id, name, macAddress.toUpperCase(), port);
 
     if (affectedRows === 0) {
       throw '更新了0條紀錄';
@@ -91,6 +92,7 @@ router.delete('/:id', async (req, res) => {
 
     return res.send('刪除成功');
   } catch (error) {
+    console.error(error);
     return res.status(400).send(`刪除失敗: ${error}`);
   }
 });

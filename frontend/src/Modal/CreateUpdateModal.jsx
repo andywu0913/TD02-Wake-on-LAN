@@ -51,7 +51,7 @@ function createModal(props) {
               </Form.Group>
 
               <Form.Group>
-                <Form.Label>MAC位址</Form.Label>
+                <Form.Label>MAC位址&nbsp;<small>(冒號分隔)</small></Form.Label>
                 <InputGroup className="mb-2">
                   <Form.Control
                     name="macAddress"
