@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-const element = <h1>Hello, world</h1>;
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-ReactDom.render(element, document.getElementById('app'));
+import App from './App';
+
+ReactDom.render(<App />, document.getElementById('app'));
