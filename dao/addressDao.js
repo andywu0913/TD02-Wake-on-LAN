@@ -25,6 +25,20 @@ module.exports.update = async (id, name, macAddress, port = 9) => {
   return okPacket;
 };
 
+module.exports.updateIP = async (id, ip) => {
+  const sql = 'UPDATE macAddress SET ipAddress = ? WHERE id = ?';
+  const [okPacket] = await connPool.execute(sql, [ip, id]);
+
+  return okPacket;
+};
+
+module.exports.updatePingTime = async (id, time) => {
+  const sql = 'UPDATE macAddress SET pingTime = ? WHERE id = ?';
+  const [okPacket] = await connPool.execute(sql, [time, id]);
+
+  return okPacket;
+};
+
 module.exports.delete = async (id) => {
   const sql = 'DELETE FROM macAddress WHERE id = ?';
   const [okPacket] = await connPool.execute(sql, [id]);

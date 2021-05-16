@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { HddNetwork, Lightning, PencilSquare, PlugFill, TrashFill } from 'react-bootstrap-icons';
+import { BroadcastPin, CloudCheckFill, CloudSlashFill, Cursor, HddNetwork, Lightning, PencilSquare, PlugFill, TrashFill } from 'react-bootstrap-icons';
 
 import axios from 'axios';
 import moment from 'moment';
@@ -114,6 +114,62 @@ export default function MainPage() {
       }, 400));
   }
 
+  function handleRefreshIPAddress(name, id) {
+    swal.fire({
+      timer: 8000,
+      timerProgressBar: true,
+      text: `從 ${name} 的MAC位址獲取IP位址，請稍候`,
+      onOpen: () => swal.showLoading(),
+      allowOutsideClick: () => !swal.isLoading(),
+    });
+
+    axios.get(`${BackendURL}/LAN/refreshIP/${id}`)
+      .then((response) => {
+        setTimeout(() => {
+          swal.fire({ text: response.data, showConfirmButton: false, timer: 2000 })
+            .then(() => setTimeout(() => {
+              setShowCreateUpdateModal(false);
+              setNeedReload(true);
+            }, 200));
+        }, 400);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
+          return;
+        }
+        swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
+      });
+  }
+
+  function handlePingIPAddress(name, id) {
+    swal.fire({
+      timer: 8000,
+      timerProgressBar: true,
+      text: `Ping ${name} 的IP位址獲取裝置狀態，請稍候`,
+      onOpen: () => swal.showLoading(),
+      allowOutsideClick: () => !swal.isLoading(),
+    });
+
+    axios.get(`${BackendURL}/LAN/ping/${id}`)
+      .then((response) => {
+        setTimeout(() => {
+          swal.fire({ text: response.data, showConfirmButton: false, timer: 2000 })
+            .then(() => setTimeout(() => {
+              setShowCreateUpdateModal(false);
+              setNeedReload(true);
+            }, 200));
+        }, 400);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          swal.fire({ icon: 'error', title: 'Error', text: error.response.data });
+          return;
+        }
+        swal.fire({ icon: 'error', title: 'Error', text: 'Unknown error.' });
+      });
+  }
+
   function handleDelete(name, id) {
     swal.fire({
       title: 'Delete',
@@ -169,7 +225,7 @@ export default function MainPage() {
             <HddNetwork size="1.25rem" />&nbsp;新增MAC位址
           </Button>
           <Button variant="outline-success" className="mt-3 text-nowrap" onClick={() => handleWakeUp()}>
-            <PlugFill size="1.25rem" />&nbsp;發送開機訊號至所有裝置
+            <BroadcastPin size="1.25rem" />&nbsp;發送開機訊號至所有裝置
           </Button>
           <hr />
         </Col>
@@ -180,8 +236,10 @@ export default function MainPage() {
             <th>暱稱</th>
             <th>MAC位址</th>
             <th>Port</th>
+            <th>IP位址</th>
+            <th>裝置狀態(Ping)</th>
             <th>創建時間</th>
-            <th>最後修改時間</th>
+            <th>最後異動時間</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -194,11 +252,23 @@ export default function MainPage() {
                 <td className="align-middle text-nowrap">{user.name}</td>
                 <td className="align-middle text-nowrap">{user.macAddress}</td>
                 <td className="align-middle text-nowrap">{user.port}</td>
+                <td className="align-middle text-nowrap">{user.ipAddress}</td>
+                <td className="align-middle text-nowrap">
+                  {user.pingTime ? <CloudCheckFill size="1.75rem" color="#99ff99" /> : <CloudSlashFill size="1.75rem" color="#ff9999" />}
+                  &nbsp;
+                  {user.pingTime ? <small>({user.pingTime}ms)</small> : <small>{user.pingTime}(offline)</small>}
+                </td>
                 <td className="align-middle text-nowrap">{createTime}</td>
                 <td className="align-middle text-nowrap">{updateTime}</td>
                 <td className="align-middle text-nowrap">
                   <Button variant="success" className="mr-2 text-nowrap" size="sm" onClick={() => handleWakeUp(user.id)}>
-                    <Lightning size="1.25rem" />&nbsp;發送開機訊號
+                    <PlugFill size="1.25rem" />&nbsp;發送開機訊號
+                  </Button>
+                  <Button variant="secondary" className="mr-2 text-nowrap" size="sm" onClick={() => handleRefreshIPAddress(user.name, user.id)}>
+                    <Lightning size="1.25rem" />&nbsp;獲取IP位址
+                  </Button>
+                  <Button variant="secondary" className="mr-2 text-nowrap" size="sm" disabled={!user.ipAddress} onClick={() => handlePingIPAddress(user.name, user.id)}>
+                    <Cursor size="1.25rem" />&nbsp;Ping裝置狀態
                   </Button>
                   <Button variant="info" className="mr-2 text-nowrap" size="sm" onClick={() => toggleCreateUpdateModal(user)}>
                     <PencilSquare size="1.25rem" />&nbsp;編輯

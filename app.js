@@ -8,6 +8,7 @@ const logger = require('morgan');
 
 const addressRouter = require('@routes/address');
 const wakeRouter = require('@routes/wake');
+const lanRouter = require('@routes/lan');
 
 const app = express();
 
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/address', addressRouter);
 app.use('/api/wake', wakeRouter);
+app.use('/api/LAN', lanRouter);
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, './public/', 'index.html')));
 
