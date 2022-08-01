@@ -1,4 +1,4 @@
-# TD02 Wake on LAN
+# Wake on LAN
 
 A simple web app for managing and sending wake-up-packet(magic packet) to local devices.
 
